@@ -27,10 +27,7 @@ public class ConnectionQuiz
 		{
 			throw new Exception("");
 		}
-		finally
-		{
-			con.close();
-		}
+		
 		
 		}
 	}
