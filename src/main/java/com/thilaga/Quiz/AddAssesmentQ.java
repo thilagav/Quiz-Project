@@ -11,9 +11,13 @@ public class AddAssesmentQ {
 	{
 		int row=0;
 			
-		String sql="select Q.ID,Q.Q_TEXT from QUESTION Q, QUES_TYPE QT where QT.IS_ACTIVE=1 and Q.Q_TYPE_ID=QT.ID";
+		String sql="SELECT Q.ID,Q.Q_TEXT FROM QUESTION Q, QUES_TYPE QT WHERE Q.ID NOT IN(SELECT QUES_TEXT_ID FROM ASSES_QUESTION WHERE ASSES_ID=?)AND QT.IS_ACTIVE=1 AND QT.ID=Q.Q_TYPE_ID";
 		PreparedStatement pst1=con.prepareStatement(sql);
+		pst1.setInt(1, id);
 		ResultSet rs1=pst1.executeQuery();
+		if(rs1.next()==false)
+			System.out.println("No Quesestions to add\n");
+		else
 		while(rs1.next())
 		{
 			String ques=rs1.getString("Q.Q_Text");
@@ -48,7 +52,7 @@ public class AddAssesmentQ {
 			int qid=rs.getInt("Q.ID");
 			System.out.println("Question: "+ s);
 			System.out.println("\n Choices: ");
-			String sql2="select ANS_TEXT from QUES_ANS_OPT where Q_TEXT_ID= ?";
+			String sql2="SELECT QO.ANS_TEXT, QO.Q_TEXT_ID FROM QUES_ANS_OPT QO, QUES_TYPE QT, QUESTION Q WHERE Q_TEXT_ID= ? AND QT.Q_TYPE !='ONE WORD ANSWER' AND QT.ID=Q.Q_TYPE_ID AND Q.ID=QO.Q_TEXT_ID";
 			PreparedStatement pst1=con.prepareStatement(sql2);
 			pst1.setInt(1, qid);
 			ResultSet rs1=pst1.executeQuery();
@@ -101,8 +105,8 @@ public class AddAssesmentQ {
 			String s=rs.getString("Q_TEXT");
 			int qid=rs.getInt("Q.ID");
 			System.out.println("Question: "+ s);
-			System.out.println("\n Choices: ");
-			String sql2="select ANS_TEXT from QUES_ANS_OPT where Q_TEXT_ID= ?";
+			//System.out.println("\n Choices: ");
+			String sql2="SELECT QO.ANS_TEXT, QO.Q_TEXT_ID FROM QUES_ANS_OPT QO, QUES_TYPE QT, QUESTION Q WHERE Q_TEXT_ID= ? AND QT.Q_TYPE !='ONE WORD ANSWER' AND QT.ID=Q.Q_TYPE_ID AND Q.ID=QO.Q_TEXT_ID";
 			PreparedStatement pst1=con.prepareStatement(sql2);
 			pst1.setInt(1, qid);
 			ResultSet rs1=pst1.executeQuery();
@@ -114,9 +118,11 @@ public class AddAssesmentQ {
 			System.out.println("Your Answer:\n");
 			Scanner s1= new Scanner(System.in);
 			String ans=s1.nextLine();
+			
+			
 			String sql3=" select Q.Q_SCORE from QUESTION Q, QUES_ANS_OPT QO, QUES_CORRECT_ANS QC where QO.ANS_TEXT=? and Q.ID=QO.Q_TEXT_ID and Q.ID=QC.QUES_ID and QO.ID=QC.Q_ANS_OPT_ID";	
 			PreparedStatement pst2=con.prepareStatement(sql3);
-			pst2.setString(1, ans);
+			pst2.setString(1, ans.toUpperCase());
 			ResultSet rs2= pst2.executeQuery();
 			if(rs2.next()==true)
 			{

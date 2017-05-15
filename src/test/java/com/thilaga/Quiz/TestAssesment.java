@@ -5,11 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import quizValidator.ValidateAssesmentID;
 
 import connectionQ.ConnectionQuiz;
 
 public class TestAssesment {
-	public static void main(String[] args) throws ClassNotFoundException, SQLException
+	public static void main(String[] args) throws Exception
 	{
 		Connection c=ConnectionQuiz.getconnectQuiz();
 		System.out.println("LIST OF ASSESMENT NAMES");
@@ -25,7 +26,7 @@ public class TestAssesment {
 		System.out.println("ENTER THE ASSESSMENT ID:");
 		Scanner nid = new Scanner(System.in);
 		int assesid=nid.nextInt();
-		
+		ValidateAssesmentID.verifyAsessID(assesid);
 		System.out.println("Enter your choice: \n1.ADD Q to ASSESMENT \n 2. DEL Q from ASSESMENT\n 3. LIST ASSESSMENT Q \n 4. TAKE TEST\n 5.EXIT");
 		Scanner s=new Scanner(System.in);
 		int a=s.nextInt();
